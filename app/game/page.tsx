@@ -134,7 +134,7 @@ export default function Game() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-400 via-orange-300 to-yellow-400 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-orange-200 via-orange-100 to-yellow-200 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl p-6 md:p-8">
         {/* ホームに戻るボタン */}
         <Link
@@ -193,10 +193,10 @@ export default function Game() {
                   : ""
               } ${
                 choice.value === "rock"
-                  ? "bg-gradient-to-br from-orange-500 to-red-500"
+                  ? "bg-gradient-to-br from-orange-300 to-red-300"
                   : choice.value === "paper"
-                    ? "bg-gradient-to-br from-yellow-400 to-orange-400"
-                    : "bg-gradient-to-br from-pink-500 to-red-400"
+                    ? "bg-gradient-to-br from-yellow-200 to-orange-200"
+                    : "bg-gradient-to-br from-pink-300 to-red-300"
               }`}
             >
               <span
