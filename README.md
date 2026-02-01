@@ -1,5 +1,45 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## プロジェクト概要
+
+じゃんけんゲームとDevBoardを含むNext.jsアプリケーションです。
+
+## GitHub MCP設定
+
+このプロジェクトではGitHub MCP（Model Context Protocol）サーバーを使用してGitHubのデータにアクセスできます。
+
+### セットアップ手順
+
+1. **GitHub Personal Access Tokenの作成**
+   - GitHubのSettings > Developer settings > Personal access tokens > Tokens (classic)
+   - 新しいトークンを作成し、必要な権限（repo, read:orgなど）を付与
+
+2. **CursorのMCP設定**
+   - Cursorの設定ファイル（通常は `~/.cursor/mcp.json` または Cursor設定内）に以下を追加：
+
+```json
+{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "your_token_here"
+      }
+    }
+  }
+}
+```
+
+3. **環境変数の設定**
+   - `.env.local` ファイルを作成し、以下を追加：
+   ```
+   GITHUB_TOKEN=your_token_here
+   ```
+
 ## Getting Started
 
 First, run the development server:

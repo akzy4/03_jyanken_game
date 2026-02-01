@@ -2,16 +2,16 @@ import Link from "next/link";
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-100 to-yellow-100">
+    <div className="min-h-screen bg-gradient-to-br from-orange-100 to-yellow-100 dark:from-gray-900 dark:to-gray-800">
       <div className="max-w-4xl mx-auto px-4 py-16">
-        <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-center text-orange-600 mb-8">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 md:p-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-center text-orange-600 dark:text-orange-400 mb-8">
             概要
           </h1>
 
-          <div className="space-y-6 text-gray-700">
+          <div className="space-y-6 text-gray-700 dark:text-gray-300">
             <section>
-              <h2 className="text-2xl font-bold text-orange-600 mb-4">
+              <h2 className="text-2xl font-bold text-orange-600 dark:text-orange-400 mb-4">
                 じゃんけんゲームとは
               </h2>
               <p className="text-lg leading-relaxed">
@@ -21,7 +21,7 @@ export default function About() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-orange-600 mb-4">
+              <h2 className="text-2xl font-bold text-orange-600 dark:text-orange-400 mb-4">
                 遊び方
               </h2>
               <ol className="list-decimal list-inside space-y-2 text-lg">
@@ -34,7 +34,7 @@ export default function About() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-orange-600 mb-4">
+              <h2 className="text-2xl font-bold text-orange-600 dark:text-orange-400 mb-4">
                 ルール
               </h2>
               <ul className="list-disc list-inside space-y-2 text-lg">
@@ -49,7 +49,7 @@ export default function About() {
               <div className="text-center">
                 <Link
                   href="/game"
-                  className="inline-block bg-gradient-to-r from-orange-400 to-orange-600 text-white rounded-lg px-8 py-3 hover:from-orange-500 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                  className="inline-block bg-gradient-to-r from-orange-400 to-orange-600 dark:from-orange-600 dark:to-orange-700 text-white rounded-lg px-8 py-3 hover:from-orange-500 hover:to-orange-700 dark:hover:from-orange-700 dark:hover:to-orange-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
                 >
                   ゲームを始める
                 </Link>

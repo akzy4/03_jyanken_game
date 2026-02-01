@@ -134,12 +134,12 @@ export default function Game() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-200 via-orange-100 to-yellow-200 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl p-6 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-orange-200 via-orange-100 to-yellow-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-2xl p-6 md:p-8">
         {/* ホームに戻るボタン */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 bg-amber-50 hover:bg-amber-100 text-gray-700 rounded-lg px-4 py-2 mb-6 transition-colors"
+          className="inline-flex items-center gap-2 bg-amber-50 dark:bg-amber-900/30 hover:bg-amber-100 dark:hover:bg-amber-900/50 text-gray-700 dark:text-gray-200 rounded-lg px-4 py-2 mb-6 transition-colors"
         >
           <span>🏠</span>
           <span>ホームに戻る</span>
@@ -147,34 +147,34 @@ export default function Game() {
 
         {/* タイトル */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-orange-600 mb-2 flex items-center justify-center gap-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-orange-600 dark:text-orange-400 mb-2 flex items-center justify-center gap-2">
             <span>✂️</span>
-            <span>じゃんけんゲーム</span>
+            <span>ジャンケンゲーム</span>
             <span>✂️</span>
           </h1>
-          <p className="text-gray-600 text-sm md:text-base">
+          <p className="text-gray-600 dark:text-gray-300 text-sm md:text-base">
             吉田くんが作った最初のゲームです!
           </p>
         </div>
 
         {/* スコアボード */}
-        <div className="bg-yellow-50 rounded-2xl p-6 mb-8">
+        <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-2xl p-6 mb-8">
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
-              <div className="text-sm text-gray-600 mb-2">あなた</div>
-              <div className="text-4xl font-bold text-orange-600">
+              <div className="text-sm text-gray-600 dark:text-gray-300 mb-2">あなた</div>
+              <div className="text-4xl font-bold text-orange-600 dark:text-orange-400">
                 {scores.user}
               </div>
             </div>
             <div>
-              <div className="text-sm text-gray-600 mb-2">引き分け</div>
-              <div className="text-4xl font-bold text-yellow-600">
+              <div className="text-sm text-gray-600 dark:text-gray-300 mb-2">引き分け</div>
+              <div className="text-4xl font-bold text-yellow-600 dark:text-yellow-400">
                 {scores.draw}
               </div>
             </div>
             <div>
-              <div className="text-sm text-gray-600 mb-2">コンピューター</div>
-              <div className="text-4xl font-bold text-orange-600">
+              <div className="text-sm text-gray-600 dark:text-gray-300 mb-2">コンピューター</div>
+              <div className="text-4xl font-bold text-orange-600 dark:text-orange-400">
                 {scores.computer}
               </div>
             </div>
@@ -193,10 +193,10 @@ export default function Game() {
                   : ""
               } ${
                 choice.value === "rock"
-                  ? "bg-gradient-to-br from-orange-300 to-red-300"
+                  ? "bg-gradient-to-br from-orange-300 to-red-300 dark:from-orange-600 dark:to-red-600"
                   : choice.value === "paper"
-                    ? "bg-gradient-to-br from-yellow-200 to-orange-200"
-                    : "bg-gradient-to-br from-pink-300 to-red-300"
+                    ? "bg-gradient-to-br from-yellow-200 to-orange-200 dark:from-yellow-600 dark:to-orange-600"
+                    : "bg-gradient-to-br from-pink-300 to-red-300 dark:from-pink-600 dark:to-red-600"
               }`}
             >
               <span
@@ -211,14 +211,14 @@ export default function Game() {
         </div>
 
         {/* 結果表示 */}
-        <div className="bg-white rounded-xl p-6 mb-6 text-center min-h-[100px] flex items-center justify-center">
+        <div className="bg-white dark:bg-gray-700 rounded-xl p-6 mb-6 text-center min-h-[100px] flex items-center justify-center">
           {userChoice && computerChoice ? (
             <div className="space-y-4 animate-fade-in">
-              <div className="text-lg text-gray-700 animate-slide-up">
+              <div className="text-lg text-gray-700 dark:text-gray-200 animate-slide-up">
                 あなた: {choices.find((c) => c.value === userChoice)?.emoji}{" "}
                 {choices.find((c) => c.value === userChoice)?.label}
               </div>
-              <div className="text-lg text-gray-700 animate-slide-up" style={{ animationDelay: "0.1s" }}>
+              <div className="text-lg text-gray-700 dark:text-gray-200 animate-slide-up" style={{ animationDelay: "0.1s" }}>
                 コンピューター:{" "}
                 {choices.find((c) => c.value === computerChoice)?.emoji}{" "}
                 {choices.find((c) => c.value === computerChoice)?.label}
@@ -226,10 +226,10 @@ export default function Game() {
               <div
                 className={`text-2xl font-bold animate-bounce-in ${
                   result === "win"
-                    ? "text-green-600"
+                    ? "text-green-600 dark:text-green-400"
                     : result === "lose"
-                      ? "text-red-600"
-                      : "text-yellow-600"
+                      ? "text-red-600 dark:text-red-400"
+                      : "text-yellow-600 dark:text-yellow-400"
                 }`}
                 style={{ animationDelay: "0.2s" }}
               >
@@ -241,7 +241,7 @@ export default function Game() {
               </div>
             </div>
           ) : (
-            <p className="text-gray-500 text-lg">選択してください!</p>
+            <p className="text-gray-500 dark:text-gray-400 text-lg">選択してください!</p>
           )}
         </div>
 
@@ -249,7 +249,7 @@ export default function Game() {
         <div className="text-center">
           <button
             onClick={resetScores}
-            className="bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl px-8 py-3 hover:from-orange-600 hover:to-red-600 transition-all shadow-lg hover:shadow-xl"
+            className="bg-gradient-to-r from-orange-500 to-red-500 dark:from-orange-600 dark:to-red-600 text-white rounded-xl px-8 py-3 hover:from-orange-600 hover:to-red-600 dark:hover:from-orange-700 dark:hover:to-red-700 transition-all shadow-lg hover:shadow-xl"
           >
             スコアをリセット
           </button>
