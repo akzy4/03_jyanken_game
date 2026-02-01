@@ -72,13 +72,7 @@ function applyTheme(theme: Theme) {
  * - document.documentElementへのクラス適用
  */
 export function useTheme(): UseThemeReturn {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    // 初期値はSSR時は"light"、クライアント時はgetInitialTheme()の結果
-    if (typeof window === "undefined") {
-      return "light";
-    }
-    return getInitialTheme();
-  });
+  const [theme, setThemeState] = useState<Theme>("light");
 
   // テーマを設定し、localStorageに保存
   const setTheme = useCallback((newTheme: Theme) => {
@@ -98,16 +92,20 @@ export function useTheme(): UseThemeReturn {
     setTheme(theme === "light" ? "dark" : "light");
   }, [theme, setTheme]);
 
-  // 初期化: クライアントサイドでテーマを適用
+  // 初期化: クライアントサイドでテーマを読み込み適用
   useEffect(() => {
+    // マウント時に確実にテーマを適用
     const initialTheme = getInitialTheme();
     setThemeState(initialTheme);
+    // 即座に適用（次のレンダリングを待たない）
     applyTheme(initialTheme);
   }, []);
 
   // テーマ変更時にdocument.documentElementを更新
   useEffect(() => {
-    applyTheme(theme);
+    if (typeof document !== "undefined") {
+      applyTheme(theme);
+    }
   }, [theme]);
 
   // 複数タブ間の同期: storageイベントをリッスン
