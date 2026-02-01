@@ -72,7 +72,19 @@ function applyTheme(theme: Theme) {
  * - document.documentElementへのクラス適用
  */
 export function useTheme(): UseThemeReturn {
-  const [theme, setThemeState] = useState<Theme>("light");
+  const [theme, setThemeState] = useState<Theme>(() => {
+    // SSR時は"light"を返す
+    if (typeof window === "undefined") {
+      return "light";
+    }
+    // クライアント時は初期テーマを取得して即座に適用
+    const initial = getInitialTheme();
+    // 初期化時に即座にDOMに適用（useEffectを待たない）
+    if (typeof document !== "undefined") {
+      applyTheme(initial);
+    }
+    return initial;
+  });
 
   // テーマを設定し、localStorageに保存
   const setTheme = useCallback((newTheme: Theme) => {
@@ -87,10 +99,20 @@ export function useTheme(): UseThemeReturn {
     }
   }, []);
 
-  // テーマを切り替え
+  // テーマを切り替え（関数型更新を使用して状態依存を回避）
   const toggleTheme = useCallback(() => {
-    setTheme(theme === "light" ? "dark" : "light");
-  }, [theme, setTheme]);
+    setThemeState((currentTheme) => {
+      const newTheme = currentTheme === "light" ? "dark" : "light";
+      applyTheme(newTheme);
+      // localStorageに保存
+      try {
+        localStorage.setItem(THEME_STORAGE_KEY, newTheme);
+      } catch (error) {
+        console.warn("Failed to save theme to localStorage:", error);
+      }
+      return newTheme;
+    });
+  }, []);
 
   // 初期化: クライアントサイドでテーマを読み込み適用
   useEffect(() => {
@@ -99,6 +121,16 @@ export function useTheme(): UseThemeReturn {
     setThemeState(initialTheme);
     // 即座に適用（次のレンダリングを待たない）
     applyTheme(initialTheme);
+    
+    // localStorageに保存されていない場合は保存（初回アクセス時）
+    try {
+      const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+      if (!storedTheme) {
+        localStorage.setItem(THEME_STORAGE_KEY, initialTheme);
+      }
+    } catch (error) {
+      console.warn("Failed to save initial theme to localStorage:", error);
+    }
   }, []);
 
   // テーマ変更時にdocument.documentElementを更新

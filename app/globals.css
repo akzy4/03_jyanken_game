@@ -16,8 +16,8 @@
 /* .darkクラスがhtml要素に適用されたときにダークモードが有効になる */
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #000000;
+  --foreground: #ffffff;
 }
 
 body {

@@ -134,12 +134,12 @@ export default function Game() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-200 via-orange-100 to-yellow-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-2xl p-6 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-orange-200 via-orange-100 to-yellow-200 dark:from-black dark:via-black dark:to-black flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-black rounded-3xl shadow-2xl w-full max-w-2xl p-6 md:p-8 border dark:border-gray-800">
         {/* ホームに戻るボタン */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 bg-amber-50 dark:bg-amber-900/30 hover:bg-amber-100 dark:hover:bg-amber-900/50 text-gray-700 dark:text-gray-200 rounded-lg px-4 py-2 mb-6 transition-colors"
+          className="inline-flex items-center gap-2 bg-amber-50 dark:bg-black hover:bg-amber-100 dark:hover:bg-gray-900 text-gray-700 dark:text-white rounded-lg px-4 py-2 mb-6 transition-colors border dark:border-gray-800"
         >
           <span>🏠</span>
           <span>ホームに戻る</span>
@@ -158,7 +158,7 @@ export default function Game() {
         </div>
 
         {/* スコアボード */}
-        <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-2xl p-6 mb-8">
+        <div className="bg-yellow-50 dark:bg-black rounded-2xl p-6 mb-8 border dark:border-gray-800">
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
               <div className="text-sm text-gray-600 dark:text-gray-300 mb-2">あなた</div>
@@ -211,7 +211,7 @@ export default function Game() {
         </div>
 
         {/* 結果表示 */}
-        <div className="bg-white dark:bg-gray-700 rounded-xl p-6 mb-6 text-center min-h-[100px] flex items-center justify-center">
+        <div className="bg-white dark:bg-black rounded-xl p-6 mb-6 text-center min-h-[100px] flex items-center justify-center border dark:border-gray-800">
           {userChoice && computerChoice ? (
             <div className="space-y-4 animate-fade-in">
               <div className="text-lg text-gray-700 dark:text-gray-200 animate-slide-up">

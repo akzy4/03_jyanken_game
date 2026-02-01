@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const owner = searchParams.get("owner") || "akzy4";
-  const repo = searchParams.get("repo") || "jyanken";
+  const repo = searchParams.get("repo") || "03_jyanken_game";
   const state = searchParams.get("state") || "all";
   const perPage = searchParams.get("per_page") || "10";
 

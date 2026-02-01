@@ -61,7 +61,7 @@ export default function DevBoard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [owner, setOwner] = useState("akzy4");
-  const [repo, setRepo] = useState("jyanken");
+  const [repo, setRepo] = useState("03_jyanken_game");
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -83,9 +83,45 @@ export default function DevBoard() {
           setError(`コミットの取得エラー: ${commitsData.error}`);
         }
       } else {
-        const errorData = await commitsRes.json().catch(() => ({ error: `HTTP ${commitsRes.status}` }));
-        console.error("Commits API error:", errorData);
-        setError(`コミットの取得エラー: ${errorData.error || commitsRes.statusText}`);
+        // エラーレスポンスの処理を改善
+        let errorMessage = `HTTP ${commitsRes.status}`;
+        let errorDetails: unknown = null;
+        
+        try {
+          const errorText = await commitsRes.text();
+          if (errorText) {
+            try {
+              const errorData = JSON.parse(errorText);
+              errorMessage = errorData.error || errorData.message || errorMessage;
+              errorDetails = errorData;
+            } catch {
+              errorMessage = errorText || errorMessage;
+              errorDetails = errorText;
+            }
+          }
+        } catch (e) {
+          // レスポンスの読み取りに失敗した場合は、ステータステキストを使用
+          errorMessage = commitsRes.statusText || errorMessage;
+          errorDetails = e;
+        }
+        
+        // 404エラーの場合は、リポジトリが見つからないことを明確に表示
+        if (commitsRes.status === 404) {
+          errorMessage = `リポジトリ "${owner}/${repo}" が見つかりません。リポジトリ名とオーナー名を確認してください。`;
+        }
+        
+        // エラーログを詳細に記録（開発時のみ）
+        if (process.env.NODE_ENV === "development") {
+          console.error("Commits API error:", {
+            status: commitsRes.status,
+            statusText: commitsRes.statusText,
+            message: errorMessage,
+            details: errorDetails,
+            url: `/api/github/commits?owner=${owner}&repo=${repo}`,
+          });
+        }
+        
+        setError(`コミットの取得エラー: ${errorMessage}`);
       }
 
       if (issuesRes.ok) {
@@ -189,23 +225,23 @@ export default function DevBoard() {
       );
     }
     return (
-      <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+      <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-200">
         クローズ済み
       </span>
     );
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-black">
       {/* ヘッダー */}
-      <div className="bg-white dark:bg-gray-900 shadow-sm border-b dark:border-gray-700">
+      <div className="bg-white dark:bg-black shadow-sm border-b dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-gray-900 dark:bg-gray-100 rounded flex items-center justify-center">
                 <div className="grid grid-cols-3 gap-0.5">
                   {[...Array(9)].map((_, i) => (
-                    <div key={i} className="w-1 h-1 bg-white dark:bg-gray-900 rounded" />
+                    <div key={i} className="w-1 h-1 bg-white dark:bg-black rounded" />
                   ))}
                 </div>
               </div>
@@ -226,7 +262,7 @@ export default function DevBoard() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* 統計情報 */}
-        <div className="mb-6 text-sm text-gray-600 dark:text-gray-400">
+        <div className="mb-6 text-sm text-gray-600 dark:text-gray-300">
           <span>総数 {activities.length}</span>
           <span className="mx-2">|</span>
           <span>コミット {commits.length}</span>
@@ -237,13 +273,13 @@ export default function DevBoard() {
         </div>
 
         {/* タブ */}
-        <div className="flex gap-4 mb-6 border-b dark:border-gray-700">
+        <div className="flex gap-4 mb-6 border-b dark:border-gray-800">
           <button
             onClick={() => setActiveTab("kanban")}
             className={`pb-3 px-1 border-b-2 transition-colors ${
               activeTab === "kanban"
                 ? "border-green-500 dark:border-green-400 text-green-600 dark:text-green-400"
-                : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                : "border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white"
             }`}
           >
             <div className="flex items-center gap-2">
@@ -256,7 +292,7 @@ export default function DevBoard() {
             className={`pb-3 px-1 border-b-2 transition-colors relative ${
               activeTab === "recent"
                 ? "border-green-500 dark:border-green-400 text-green-600 dark:text-green-400"
-                : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                : "border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white"
             }`}
           >
             <div className="flex items-center gap-2">
@@ -279,11 +315,11 @@ export default function DevBoard() {
             </h2>
 
             {loading ? (
-              <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+              <div className="text-center py-12 text-gray-500 dark:text-gray-300">
                 読み込み中...
               </div>
             ) : error ? (
-              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-4">
+              <div className="bg-red-50 dark:bg-black border border-red-200 dark:border-red-800 rounded-lg p-4 mb-4">
                 <div className="text-red-800 dark:text-red-300 font-medium mb-2">エラーが発生しました</div>
                 <div className="text-red-600 dark:text-red-400 text-sm">{error}</div>
                 <button
@@ -302,7 +338,7 @@ export default function DevBoard() {
                       return (
                         <div
                           key={activity.id}
-                          className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 flex items-start gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                          className="bg-gray-50 dark:bg-black rounded-lg p-4 flex items-start gap-3 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
                         >
                           <div className="flex-shrink-0">
                             {activity.avatar ? (
@@ -312,7 +348,7 @@ export default function DevBoard() {
                                 className="w-8 h-8 rounded-full"
                               />
                             ) : (
-                              <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-xs text-gray-600 dark:text-gray-300">
+                              <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-800 flex items-center justify-center text-xs text-gray-600 dark:text-gray-200">
                                 {activity.author?.charAt(0)?.toUpperCase() || "?"}
                               </div>
                             )}
@@ -324,7 +360,7 @@ export default function DevBoard() {
                                 {activity.title}
                               </span>
                             </div>
-                            <div className="text-sm text-gray-500 dark:text-gray-400">
+                            <div className="text-sm text-gray-500 dark:text-gray-300">
                               {activity.author} • {formatDate(activity.date)} • {owner}/{repo}
                             </div>
                           </div>
@@ -337,7 +373,7 @@ export default function DevBoard() {
                       return (
                         <div
                           key={activity.id}
-                          className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 flex items-start justify-between hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                          className="bg-gray-50 dark:bg-black rounded-lg p-4 flex items-start justify-between hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors border dark:border-gray-800"
                         >
                           <div className="flex items-start gap-3 flex-1 min-w-0">
                             <span className="text-orange-500 dark:text-orange-400 text-xl flex-shrink-0">⏰</span>
@@ -347,12 +383,12 @@ export default function DevBoard() {
                                   {activity.title}
                                 </span>
                                 {issue.labels.length > 0 && (
-                                  <span className="text-xs bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-0.5 rounded-full flex-shrink-0">
+                                  <span className="text-xs bg-gray-200 dark:bg-gray-900 text-gray-700 dark:text-gray-200 px-2 py-0.5 rounded-full flex-shrink-0 border dark:border-gray-800">
                                     {issue.labels[0].name}
                                   </span>
                                 )}
                               </div>
-                              <div className="text-sm text-gray-500 dark:text-gray-400">
+                              <div className="text-sm text-gray-500 dark:text-gray-300">
                                 {owner}/{repo} #{issue.number} • {activity.author} • {formatDate(activity.date)}
                               </div>
                             </div>
@@ -369,7 +405,7 @@ export default function DevBoard() {
                       return (
                         <div
                           key={activity.id}
-                          className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 flex items-start justify-between hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                          className="bg-gray-50 dark:bg-black rounded-lg p-4 flex items-start justify-between hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors border dark:border-gray-800"
                         >
                           <div className="flex items-start gap-3 flex-1 min-w-0">
                             <span className="text-purple-500 dark:text-purple-400 text-xl flex-shrink-0">🔄</span>
@@ -377,7 +413,7 @@ export default function DevBoard() {
                               <div className="font-medium text-gray-900 dark:text-gray-100 mb-1 truncate">
                                 {activity.title}
                               </div>
-                              <div className="text-sm text-gray-500 dark:text-gray-400">
+                              <div className="text-sm text-gray-500 dark:text-gray-300">
                                 {owner}/{repo} #{pr.number} • {activity.author} • {formatDate(activity.date)}
                               </div>
                             </div>
@@ -392,7 +428,7 @@ export default function DevBoard() {
                     return null;
                   })
                 ) : (
-                  <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+                  <div className="text-center py-12 text-gray-500 dark:text-gray-300">
                     データがありません
                   </div>
                 )}
@@ -404,7 +440,7 @@ export default function DevBoard() {
         {activeTab === "kanban" && (
           <div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">カンバン</h2>
-            <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+            <div className="text-center py-12 text-gray-500 dark:text-gray-300">
               カンバンビューは準備中です
             </div>
           </div>
